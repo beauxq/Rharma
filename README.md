@@ -1,7 +1,7 @@
 # Rharma
 
 A 2-D platform game that I designed and developed at age 12.
-I have since ported it to difference languages.
+I have since ported it to different languages.
 
 This is the Python 3 port.
 
