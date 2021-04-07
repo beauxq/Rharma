@@ -24,6 +24,24 @@ class Aarak:
         self.reset(level)
         self.updateImage()
 
+    def reset(self, level):
+        self.position = [2.0, 14.0]  # pp
+        self.frame = 0
+        self.pause = 0
+        self.frameD = 1  # direction moving through frames
+        self.holdFrame1 = False  # frame 1 is jumping frame
+        self.facing = 1  # 1 facing right, -1 facing left
+        if level == 6:
+            self.position = [37, 12]
+            self.facing = -1
+        if level < 5 or level == 11:
+            self.hp = 3  # a1
+        else:
+            self.hp = 5
+        self.weight = 0.0
+        self.shootx = 55.0
+        self.shooty = 55.0  # greater than 50 = nonexistent
+
     def fall(self, terrain, leftDown, rightDown):
         if self.weight > 0:
             self.position[1] += self.weight
@@ -174,24 +192,6 @@ class Aarak:
     def blit(self):
         screen.blit(self.image, ((self.position[0] * xMulti) - xMulti, (self.position[1] * yMulti) - (yMulti * 2)))
 
-    def reset(self, level):
-        self.position = [2, 14]  # pp
-        self.frame = 0
-        self.pause = 0
-        self.frameD = 1  # direction moving through frames
-        self.holdFrame1 = False  # frame 1 is jumping frame
-        self.facing = 1  # 1 facing right, -1 facing left
-        if level == 6:
-            self.position = [37, 12]
-            self.facing = -1
-        if level < 5 or level == 11:
-            self.hp = 3  # a1
-        else:
-            self.hp = 5
-        self.weight = 0
-        self.shootx = 55
-        self.shooty = 55  # greater than 50 = nonexistent
-
     def loadImages(self, level):
         self.r = []
         self.l = []
@@ -251,7 +251,7 @@ class Enemy:
 
     def reset(self):
         self.dx = -2.5 / fps
-        self.position = [50, 50]
+        self.position = [50.0, 50.0]
 
     def move(self, terrain):
         if self.position[0] < 50:  # only if it's one of the enemies on screen
@@ -285,7 +285,7 @@ def title():  # return what level the player is on (1, or 11 for secret level, -
 
     song = pygame.mixer.Sound("resources/title.ogg")
 
-    titleScreen = pygame.Surface((320, 240))
+    titleScreen = pygame.surface.Surface((320, 240))
     titleScreen.fill((0, 0, 0))
     titlePoints = ((46, 22, 37, 83), (46, 22, 67, 24), (66, 24, 64, 44), (64, 44, 46, 53), (46, 53, 69, 78),
                    (86, 22, 86, 83), (85, 53, 97, 56), (97, 22, 96, 78), (114, 72, 131, 24), (131, 24, 139, 83),
@@ -302,13 +302,13 @@ def title():  # return what level the player is on (1, or 11 for secret level, -
     titleScreen = titleScreen.convert()
 
     myFont = pygame.font.SysFont("default", int(yMulti * 2))
-    welcome = myFont.render("   WELCOME...", 0, (255, 255, 255))
-    pressAnyKey = myFont.render(" PRESS ANY KEY.", 0, (255, 255, 255))
+    welcome = myFont.render("   WELCOME...", False, (255, 255, 255))
+    pressAnyKey = myFont.render(" PRESS ANY KEY.", False, (255, 255, 255))
 
     playedSong = False
     shiftDown = False
     clock = pygame.time.Clock()
-    time = 0
+    time = 0.0
     done = False
 
     while not done:
@@ -348,7 +348,7 @@ def scene(level):
     song = pygame.mixer.Sound("resources/scene" + str(level) + ".ogg")
     song2 = pygame.mixer.Sound("resources/scene72.ogg")
 
-    background = pygame.Surface(screen.get_size())
+    background = pygame.surface.Surface(screen.get_size())
     background.fill((0, 0, 0))
     background = background.convert()
 
@@ -537,7 +537,7 @@ def scene(level):
     playedSong = False
     playedSong2 = False
     clock = pygame.time.Clock()
-    time = 0
+    time = 0.0
     SeeD = random.randint(0, 100)
     done = False
 
@@ -701,7 +701,7 @@ def play(level, lives):  # return level, lives
 
     song = pygame.mixer.Sound("resources/door.ogg")
 
-    background = pygame.Surface(screen.get_size())
+    background = pygame.surface.Surface(screen.get_size())
     background = background.convert()
     background.fill((0, 0, 0))
 
@@ -713,7 +713,7 @@ def play(level, lives):  # return level, lives
     stone = pygame.transform.scale(stone, (int(xMulti) + 1, int(yMulti) + 1))
     stone = stone.convert()
 
-    door = pygame.Surface((int(xMulti) + 1, int(yMulti) + 1))
+    door = pygame.surface.Surface((int(xMulti) + 1, int(yMulti) + 1))
     door = door.convert()
     door.fill((0x99, 0x55, 0x55))
 
@@ -735,18 +735,18 @@ def play(level, lives):  # return level, lives
     fire = fire.convert()
 
     myFont = pygame.font.SysFont("default", int(yMulti * 2))
-    livesText = myFont.render("LIVES:", 0, (255, 255, 255))
-    energyText = myFont.render("ENERGY:", 0, (255, 255, 255))
-    zero = myFont.render("0", 0, (255, 255, 255))
-    one = myFont.render("1", 0, (255, 255, 255))
-    two = myFont.render("2", 0, (255, 255, 255))
-    three = myFont.render("3", 0, (255, 255, 255))
-    four = myFont.render("4", 0, (255, 255, 255))
-    five = myFont.render("5", 0, (255, 255, 255))
-    six = myFont.render("6", 0, (255, 255, 255))
-    seven = myFont.render("7", 0, (255, 255, 255))
-    eight = myFont.render("8", 0, (255, 255, 255))
-    nine = myFont.render("9", 0, (255, 255, 255))
+    livesText = myFont.render("LIVES:", False, (255, 255, 255))
+    energyText = myFont.render("ENERGY:", False, (255, 255, 255))
+    zero = myFont.render("0", False, (255, 255, 255))
+    one = myFont.render("1", False, (255, 255, 255))
+    two = myFont.render("2", False, (255, 255, 255))
+    three = myFont.render("3", False, (255, 255, 255))
+    four = myFont.render("4", False, (255, 255, 255))
+    five = myFont.render("5", False, (255, 255, 255))
+    six = myFont.render("6", False, (255, 255, 255))
+    seven = myFont.render("7", False, (255, 255, 255))
+    eight = myFont.render("8", False, (255, 255, 255))
+    nine = myFont.render("9", False, (255, 255, 255))
 
     leftDown = False
     leftWentDown = False
@@ -798,7 +798,7 @@ def play(level, lives):  # return level, lives
                         terrain[terx + tery] = 176
 
         clock = pygame.time.Clock()
-        timeSinceEnemyHurt = 0
+        timeSinceEnemyHurt = 0.0
         finishedRoom = False
 
         while not finishedRoom:
@@ -981,7 +981,7 @@ def play(level, lives):  # return level, lives
 
 def lastroom(level, lives):  # return level, lives
 
-    background = pygame.Surface(screen.get_size())
+    background = pygame.surface.Surface(screen.get_size())
     background = background.convert()
     background.fill((0, 0, 0))
 
@@ -1004,18 +1004,18 @@ def lastroom(level, lives):  # return level, lives
     fire = fire.convert()
 
     myFont = pygame.font.SysFont("default", int(yMulti * 2))
-    livesText = myFont.render("LIVES:", 0, (255, 255, 255))
-    energyText = myFont.render("ENERGY:", 0, (255, 255, 255))
-    zero = myFont.render("0", 0, (255, 255, 255))
-    one = myFont.render("1", 0, (255, 255, 255))
-    two = myFont.render("2", 0, (255, 255, 255))
-    three = myFont.render("3", 0, (255, 255, 255))
-    four = myFont.render("4", 0, (255, 255, 255))
-    five = myFont.render("5", 0, (255, 255, 255))
-    six = myFont.render("6", 0, (255, 255, 255))
-    seven = myFont.render("7", 0, (255, 255, 255))
-    eight = myFont.render("8", 0, (255, 255, 255))
-    nine = myFont.render("9", 0, (255, 255, 255))
+    livesText = myFont.render("LIVES:", False, (255, 255, 255))
+    energyText = myFont.render("ENERGY:", False, (255, 255, 255))
+    zero = myFont.render("0", False, (255, 255, 255))
+    one = myFont.render("1", False, (255, 255, 255))
+    two = myFont.render("2", False, (255, 255, 255))
+    three = myFont.render("3", False, (255, 255, 255))
+    four = myFont.render("4", False, (255, 255, 255))
+    five = myFont.render("5", False, (255, 255, 255))
+    six = myFont.render("6", False, (255, 255, 255))
+    seven = myFont.render("7", False, (255, 255, 255))
+    eight = myFont.render("8", False, (255, 255, 255))
+    nine = myFont.render("9", False, (255, 255, 255))
 
     music = pygame.mixer.Sound("resources/lastroom peak-12.ogg")
 
@@ -1032,10 +1032,10 @@ def lastroom(level, lives):  # return level, lives
 
     while not finishedLevel:
         enemyMove = [-2.5 / fps]  # de
-        enemyWeight = 0
+        enemyWeight = 0.0
 
         enemyN = 0
-        enemyPosition = [[4, 14]]  # pe
+        enemyPosition = [[4.0, 14.0]]  # pe
         terrain = []  # ip
         for fill in range(4200):
             terrain.append(0)
@@ -1048,7 +1048,7 @@ def lastroom(level, lives):  # return level, lives
                 tery += 1
 
         clock = pygame.time.Clock()
-        timeSinceEnemyHurt = 0
+        timeSinceEnemyHurt = 0.0
         finishedRoom = False
 
         while not finishedRoom:
