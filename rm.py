@@ -849,42 +849,42 @@ def play(level, lives):  # return level, lives
                 if event.type == pygame.QUIT:
                     return -1, lives
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == 32:
+                    if event.key == pygame.K_SPACE:
                         # shoot
                         if level > 1:
                             aarak.shoot()
-                    elif event.key == 275:
+                    elif event.key == pygame.K_RIGHT:
                         aarak.facing = 1
                         rightDown = True
                         rightWentDown = True
-                    elif event.key == 276:
+                    elif event.key == pygame.K_LEFT:
                         aarak.facing = -1
                         leftDown = True
                         leftWentDown = True
-                    elif event.key == 273:
+                    elif event.key == pygame.K_UP:
                         leftWentDown = False
                         rightWentDown = False
                         aarak.jump(terrain)
-                    elif event.key == 274 and terrain[round(aarak.position[0]) * 100 +
-                                                      int(aarak.position[1])] == 61 and level != 11:
+                    elif event.key == pygame.K_DOWN and terrain[round(aarak.position[0]) * 100 +
+                                                                int(aarak.position[1])] == 61 and level != 11:
                         song.play()
                         finishedRoom = True
                         finishedLevel = True
                         level += 1
-                    elif event.key == 274 and terrain[round(aarak.position[0]) * 100 +
-                                                      int(aarak.position[1])] == 61 and level == 11:
+                    elif event.key == pygame.K_DOWN and terrain[round(aarak.position[0]) * 100 +
+                                                                int(aarak.position[1])] == 61 and level == 11:
                         # in secret level, push down in a door moves you to the next room
                         finishedRoom = True
                         aarak.position = [2, 14]
                         aarak.weight = 0
                         aarak.shootx = 55
                         aarak.shooty = 55
-                    elif event.key == 274 and level == 11:
+                    elif event.key == pygame.K_DOWN and level == 11:
                         aarak.hp = 0  # in secret level, push down when not in a door is suicide
                 elif event.type == pygame.KEYUP:
-                    if event.key == 275:
+                    if event.key == pygame.K_RIGHT:
                         rightDown = False
-                    elif event.key == 276:
+                    elif event.key == pygame.K_LEFT:
                         leftDown = False
 
             # if left/right is down or went down, move and then change WentDown to False
@@ -1142,26 +1142,26 @@ def lastroom(level, lives):  # return level, lives
                 if event.type == pygame.QUIT:
                     return -1, lives
                 elif event.type == pygame.KEYDOWN:
-                    if event.key == 32:
+                    if event.key == pygame.K_SPACE:
                         # shoot
                         if level > 1:
                             aarak.shoot()
-                    elif event.key == 275:
+                    elif event.key == pygame.K_RIGHT:
                         aarak.facing = 1
                         rightDown = True
                         rightWentDown = True
-                    elif event.key == 276:
+                    elif event.key == pygame.K_LEFT:
                         aarak.facing = -1
                         leftDown = True
                         leftWentDown = True
-                    elif event.key == 273:
+                    elif event.key == pygame.K_UP:
                         leftWentDown = False
                         rightWentDown = False
                         aarak.jump(terrain)
                 elif event.type == pygame.KEYUP:
-                    if event.key == 275:
+                    if event.key == pygame.K_RIGHT:
                         rightDown = False
-                    elif event.key == 276:
+                    elif event.key == pygame.K_LEFT:
                         leftDown = False
 
             # if left/right is down or went down, move and then change WentDown to False
