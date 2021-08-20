@@ -553,8 +553,8 @@ def scene(level: int):
             if event.type == pygame.QUIT:
                 done = True
                 level = -1
-            if event.type == pygame.KEYDOWN:  # for testing
-                done = True
+            # if event.type == pygame.KEYDOWN:  # for testing
+            #     done = True
 
         screen.blit(background, (0, 0))
         for line in lines:
