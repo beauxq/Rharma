@@ -1,4 +1,5 @@
 import random
+from typing import List, Tuple
 
 import pygame
 
@@ -18,14 +19,14 @@ fps = 40
 class Aarak:
     """ 3x3 tiles, position is defined by bottom middle """
 
-    def __init__(self, level):
+    def __init__(self, level: int):
         self.loadImages(level)
         self.DELAY = fps / 10  # animation, delay between frames
         self.reset(level)
         self.updateImage()
 
-    def reset(self, level):
-        self.position = [2.0, 14.0]  # pp
+    def reset(self, level: int):
+        self.position: List[float] = [2.0, 14.0]  # pp
         self.frame = 0
         self.pause = 0
         self.frameD = 1  # direction moving through frames
@@ -42,7 +43,7 @@ class Aarak:
         self.shootx = 55.0
         self.shooty = 55.0  # greater than 50 = nonexistent
 
-    def fall(self, terrain, leftDown, rightDown):
+    def fall(self, terrain: List[int], leftDown: bool, rightDown: bool):
         if self.weight > 0:
             self.position[1] += self.weight
         elif self.weight < 0:
@@ -84,7 +85,7 @@ class Aarak:
         if self.position[1] > 15:  # fallen in hole
             self.hp = 0
 
-    def get1up(self, lives, terrain):
+    def get1up(self, lives: int, terrain: List[int]):
         """detect collision with 1up (line 640)
         :param lives: to modify it
         :param terrain: to see where the 1up is
@@ -125,7 +126,7 @@ class Aarak:
         self.shooty = self.position[1] - 1
         self.shootv = self.facing * (10 / fps)
 
-    def jump(self, terrain):
+    def jump(self, terrain: List[int]):
         if terrain[(int(self.position[0]) * 100 + round(self.position[1])) + 1] == 176 or \
            terrain[(int(self.position[0]) * 100 + round(self.position[1])) + 1] == 64 or \
            terrain[(round(self.position[0]) * 100 + round(self.position[1])) + 1] == 176 or \
@@ -140,7 +141,7 @@ class Aarak:
             self.updateImage()
             # boing sound?
 
-    def moveLeft(self, terrain, leftWentDown, rightWentDown):
+    def moveLeft(self, terrain: List[int], leftWentDown: bool, rightWentDown: bool):
         if terrain[(round(self.position[0]) * 100 + round(self.position[1])) - 200] != 176 and \
            terrain[(round(self.position[0]) * 100 + round(self.position[1])) - 200] != 64 and \
            terrain[(round(self.position[0]) * 100 + int(self.position[1])) - 201] != 176 and \
@@ -165,7 +166,7 @@ class Aarak:
                     self.updateImage()
         return leftWentDown, rightWentDown
 
-    def moveRight(self, terrain, leftWentDown, rightWentDown):
+    def moveRight(self, terrain: List[int], leftWentDown: bool, rightWentDown: bool):
         if terrain[(round(self.position[0] - .5) * 100 + round(self.position[1])) + 200] != 176 and \
            terrain[(round(self.position[0] - .5) * 100 + round(self.position[1])) + 200] != 64 and \
            terrain[(round(self.position[0] - .5) * 100 + int(self.position[1])) + 199] != 176 and \
@@ -192,9 +193,9 @@ class Aarak:
     def blit(self):
         screen.blit(self.image, ((self.position[0] * xMulti) - xMulti, (self.position[1] * yMulti) - (yMulti * 2)))
 
-    def loadImages(self, level):
-        self.r = []
-        self.l = []
+    def loadImages(self, level: int):
+        self.r: List[pygame.surface.Surface] = []
+        self.l: List[pygame.surface.Surface] = []
         if level < 5 or level == 11:
             for i in range(3):
                 imgName = "resources/aarakr%d.png" % i
@@ -240,11 +241,11 @@ class Aarak:
 class Enemy:
     """ 3x2 tiles, position is bottom middle tile """
 
-    IMAGE = pygame.image.load("resources/enemy.png")
-    IMAGE = pygame.transform.scale(IMAGE, (int(xMulti * 3), int(yMulti * 2)))
-    transColor = IMAGE.get_at((1, 1))
-    IMAGE.set_colorkey(transColor)
-    IMAGE = IMAGE.convert()
+    loaded = pygame.image.load("resources/enemy.png")
+    scaled = pygame.transform.scale(loaded, (int(xMulti * 3), int(yMulti * 2)))
+    transColor = scaled.get_at((1, 1))
+    scaled.set_colorkey(transColor)
+    IMAGE: pygame.surface.Surface = scaled.convert()
 
     def __init__(self):
         self.reset()
@@ -253,25 +254,25 @@ class Enemy:
         self.dx = -2.5 / fps
         self.position = [50.0, 50.0]
 
-    def move(self, terrain):
+    def move(self, terrain: List[int]):
         if self.position[0] < 50:  # only if it's one of the enemies on screen
             if self.dx > 0:
-                if terrain[int(self.position[0]) * 100 + 200 + self.position[1]] != 176 and \
-                   terrain[int(self.position[0]) * 100 + 200 + self.position[1]] != 64 and \
-                   terrain[int(self.position[0]) * 100 + 199 + self.position[1]] != 176 and \
-                   terrain[int(self.position[0]) * 100 + 199 + self.position[1]] != 64 and \
-                   self.position[0] < 38 and (terrain[int(self.position[0]) * 100 + 201 + self.position[1]] == 176 or
-                                              terrain[int(self.position[0]) * 100 + 201 + self.position[1]] == 64):
+                if terrain[int(self.position[0]) * 100 + 200 + int(self.position[1])] != 176 and \
+                   terrain[int(self.position[0]) * 100 + 200 + int(self.position[1])] != 64 and \
+                   terrain[int(self.position[0]) * 100 + 199 + int(self.position[1])] != 176 and \
+                   terrain[int(self.position[0]) * 100 + 199 + int(self.position[1])] != 64 and \
+                   self.position[0] < 38 and (terrain[int(self.position[0]) * 100 + 201 + int(self.position[1])] == 176 or
+                                              terrain[int(self.position[0]) * 100 + 201 + int(self.position[1])] == 64):
                     self.position[0] += self.dx
                 else:
                     self.dx = -2.5 / fps
             elif self.dx < 0:
-                if terrain[round(self.position[0]) * 100 - 200 + self.position[1]] != 176 and \
-                   terrain[round(self.position[0]) * 100 - 200 + self.position[1]] != 64 and \
-                   terrain[round(self.position[0]) * 100 - 201 + self.position[1]] != 176 and \
-                   terrain[round(self.position[0]) * 100 - 201 + self.position[1]] != 64 and \
-                   self.position[0] > 1 and (terrain[round(self.position[0]) * 100 - 199 + self.position[1]] == 176 or
-                                             terrain[round(self.position[0]) * 100 - 199 + self.position[1]] == 64):
+                if terrain[round(self.position[0]) * 100 - 200 + int(self.position[1])] != 176 and \
+                   terrain[round(self.position[0]) * 100 - 200 + int(self.position[1])] != 64 and \
+                   terrain[round(self.position[0]) * 100 - 201 + int(self.position[1])] != 176 and \
+                   terrain[round(self.position[0]) * 100 - 201 + int(self.position[1])] != 64 and \
+                   self.position[0] > 1 and (terrain[round(self.position[0]) * 100 - 199 + int(self.position[1])] == 176 or
+                                             terrain[round(self.position[0]) * 100 - 199 + int(self.position[1])] == 64):
                     self.position[0] += self.dx
                 else:
                     self.dx = 2.5 / fps
@@ -344,7 +345,7 @@ def title():  # return what level the player is on (1, or 11 for secret level, -
     return -1
 
 
-def scene(level):
+def scene(level: int):
     song = pygame.mixer.Sound("resources/scene" + str(level) + ".ogg")
     song2 = pygame.mixer.Sound("resources/scene72.ogg")
 
@@ -697,7 +698,10 @@ def scene(level):
     return level
 
 
-def play(level, lives):  # return level, lives
+def play(level: int, lives: int) -> Tuple[int, int]:
+    """
+    returns level, lives
+    """
 
     song = pygame.mixer.Sound("resources/door.ogg")
 
@@ -719,9 +723,9 @@ def play(level, lives):  # return level, lives
 
     aarak = Aarak(level)
 
-    enemies = []
+    enemies: List[Enemy] = []
     numberOfEnemies = 4  # maximum
-    for count in range(numberOfEnemies):
+    for _ in range(numberOfEnemies):
         enemies.append(Enemy())
 
     oneUp = pygame.image.load("resources/heart1p.png")
@@ -754,18 +758,17 @@ def play(level, lives):  # return level, lives
     rightWentDown = False
 
     finishedLevel = False
-    if not level == 11:
-        file = open("resources/level" + str(level) + ".dat", 'r')
+    file = open("resources/level" + str(level) + ".dat", 'r') if level != 11 else None
+
+    clock = pygame.time.Clock()
 
     while not finishedLevel:
         for enemy in enemies:
             enemy.reset()
         enemyN = 0
-        terrain = []  # ip
-        for fill in range(4200):
-            terrain.append(0)
+        terrain: List[int] = [0] * 4200  # ip
         for terx in range(0, 4000, 100):
-            if level != 11:  # normal level
+            if file:  # normal level
                 tery = 0
                 line = file.readline()
                 elements = line.split(',')
@@ -797,7 +800,6 @@ def play(level, lives):  # return level, lives
                     if 0 < terx < 400 and tery == 15:
                         terrain[terx + tery] = 176
 
-        clock = pygame.time.Clock()
         timeSinceEnemyHurt = 0.0
         finishedRoom = False
 
@@ -810,7 +812,7 @@ def play(level, lives):  # return level, lives
             for enemy in enemies:
                 enemy.move(terrain)
 
-            for count in range(2):
+            for _ in range(2):
                 # fireball hits
 
                 if aarak.shooty < 50:
@@ -906,14 +908,14 @@ def play(level, lives):  # return level, lives
                 aarak.weight = 0
                 aarak.shootx = 55
                 aarak.shooty = 55
-                if level != 11:
+                if file:
                     file.close()
                     file = open("resources/level" + str(level) + ".dat", 'r')
                 else:
                     aarak.reset(level)
             if lives < 1:
                 finishedLevel = True
-                if level != 11:
+                if file:
                     file.close()
 
             screen.blit(background, (0, 0))
@@ -971,15 +973,18 @@ def play(level, lives):  # return level, lives
 
             if aarak.hp < 1:
                 aarak.reset(level)
-                for timePass in range(0, fps):
+                for _ in range(0, fps):
                     clock.tick(fps)
 
-    for timePass in range(0, 2 * fps):
+    for _ in range(0, 2 * fps):
         clock.tick(fps)
     return level, lives
 
 
-def lastroom(level, lives):  # return level, lives
+def lastroom(level: int, lives: int) -> Tuple[int, int]:
+    """
+    returns level, lives
+    """
 
     background = pygame.surface.Surface(screen.get_size())
     background = background.convert()
@@ -1036,9 +1041,7 @@ def lastroom(level, lives):  # return level, lives
 
         enemyN = 0
         enemyPosition = [[4.0, 14.0]]  # pe
-        terrain = []  # ip
-        for fill in range(4200):
-            terrain.append(0)
+        terrain: List[int] = [0] * 4200  # ip
         for terx in range(0, 4000, 100):
             tery = 0
             line = file.readline()
@@ -1109,7 +1112,7 @@ def lastroom(level, lives):  # return level, lives
                 enemyWeight = -15 / fps
                 # enemy boing sound? (probably not)
 
-            for count in range(2):
+            for _ in range(2):
                 # fireball hits
 
                 if aarak.shooty < 50:
@@ -1137,7 +1140,7 @@ def lastroom(level, lives):  # return level, lives
                         aarak.hp -= 1
                         timeSinceEnemyHurt = 0
 
-        # events
+            # events
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     return -1, lives
@@ -1248,7 +1251,7 @@ def lastroom(level, lives):  # return level, lives
 
             if aarak.hp < 1:
                 aarak.reset(level)
-                for timePass in range(0, fps):
+                for _ in range(0, fps):
                     clock.tick(fps)
 
     return level, lives

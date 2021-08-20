@@ -1,12 +1,22 @@
 #! /usr/bin/env python
 
-class TextRectException:
-    def __init__(self, message = None):
+from typing import List, Optional, Tuple, Union
+import pygame
+
+Color = Union[pygame.Color, Tuple[int, int, int]]
+
+class TextRectException(BaseException):
+    def __init__(self, message: Optional[str] = None):
         self.message = message
     def __str__(self):
-        return self.message
+        return str(self.message)
 
-def render_textrect(string, font, rect, text_color, background_color, justification=0):
+def render_textrect(string: str,
+                    font: pygame.font.Font,
+                    rect: pygame.Rect,
+                    text_color: Color,
+                    background_color: Color,
+                    justification: int=0) -> pygame.Surface:
     """Returns a surface containing the passed text string, reformatted
     to fit within the given rect, word-wrapping as necessary. The text
     will be anti-aliased.
@@ -28,10 +38,8 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     Success - a surface object with the text rendered onto it.
     Failure - raises a TextRectException if the text won't fit onto the surface.
     """
-
-    import pygame
     
-    final_lines = []
+    final_lines: List[str] = []
 
     requested_lines = string.splitlines()
 
@@ -48,7 +56,7 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
             # Start a new line
             accumulated_line = ""
             for word in words:
-                test_line = accumulated_line + word + " "
+                test_line: str = accumulated_line + word + " "
                 # Build the line while the words fit.    
                 if font.size(test_line)[0] < rect.width:
                     accumulated_line = test_line
@@ -62,14 +70,14 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
     # Let's try to write the text out on the surface.
 
     surface = pygame.Surface(rect.size)
-    surface.fill(background_color)
+    surface.fill(background_color)  # type: ignore
 
     accumulated_height = 0
     for line in final_lines:
         if accumulated_height + font.size(line)[1] >= rect.height:
             raise TextRectException("Once word-wrapped, the text string was too tall to fit in the rect.")
         if line != "":
-            tempsurface = font.render(line, 1, text_color)
+            tempsurface = font.render(line, True, text_color)
             if justification == 0:
                 surface.blit(tempsurface, (0, accumulated_height))
             elif justification == 1:
@@ -84,10 +92,6 @@ def render_textrect(string, font, rect, text_color, background_color, justificat
 
 
 if __name__ == '__main__':
-    import pygame
-    import pygame.font
-    from pygame.locals import *
-
     pygame.init()
 
     display = pygame.display.set_mode((400, 400))
@@ -105,7 +109,7 @@ if __name__ == '__main__':
 
     pygame.display.update()
 
-    while not pygame.event.wait().type in (QUIT, KEYDOWN):
+    while not pygame.event.wait().type in (pygame.QUIT, pygame.KEYDOWN):
         pass
 
     pygame.quit()
